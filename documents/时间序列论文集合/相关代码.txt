@@ -1,0 +1,9 @@
+相关代码
+https://github.com/gantheory/TPA-LSTM
+https://github.com/hfawaz/bigdata18 深度迁移学习用于时间序列分类
+https://github.com/awslabs/gluon-ts  亚马逊kdd2019 开源时间序列建模工具包
+相关博客
+https://zhuanlan.zhihu.com/c_1071087593646698496
+
+时间序列KDD2019教程：
+https://lovvge.github.io/Forecasting-Tutorial-KDD-2019/

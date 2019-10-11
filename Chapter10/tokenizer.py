@@ -11,4 +11,6 @@ print("Default Mode: " + "/ ".join(seg_list))
 # 
 jieba.add_word("贪心学院")
 seg_list = jieba.cut("贪心学院是国内最专业的人工智能在线教育品牌", cut_all=False)
-print("Default Mode: " + "/ ".join(seg_list)) 
+tokenizer = [word for word in seg_list]
+print(len(tokenizer))
+print("Default Mode: " + "/ ", tokenizer) 
