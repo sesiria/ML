@@ -7,6 +7,8 @@ from collections import Counter
 # **************************helper function.************************************
 # function for calculate the entropy of the data.
 # input shape should be (N,)
+
+
 def calcEntropy(data):
     nSize = len(data)
     classes = np.unique(data)
@@ -16,20 +18,26 @@ def calcEntropy(data):
     return -np.sum(p * np.log(p))
 
 # func for compare two float numbers
+
+
 def approximateEqual(X, Y):
     return np.abs(X - Y) < 10e-4
 
 # choose the most frequency label
+
+
 def chooseMaxFrequency(X):
     count = Counter(X)
-    result = sorted(count.items(), key = lambda x : x[1])
+    result = sorted(count.items(), key=lambda x: x[1])
     return result[-1][0]
 
 # **********************definition of the Decision Tree***************************
 # Node for the decision tree
+
+
 class Node:
     # feature_index = -1 for leaf nodes
-    def __init__(self, feature_index, label = None):
+    def __init__(self, feature_index, label=None):
         # check for valid leaf nodes
         if feature_index == -1:
             assert label != None
@@ -38,6 +46,8 @@ class Node:
         self.children = {}  # hashtable to store the nodes
 
 # simple decision tree classifier, only support for discrete input.
+
+
 class DecisionTreeClassifier:
     # constructor
     def __init__(self, maxDepth, maxLeaves):
@@ -53,7 +63,7 @@ class DecisionTreeClassifier:
     def predict(self, test):
         if len(test.shape) == 1:
             return self.search(self.root, test)
-        
+
         predictions = np.zeros(test.shape[0])
         for n in range(len(predictions)):
             predictions[n] = self.search(self.root, test[n, :])
@@ -77,14 +87,14 @@ class DecisionTreeClassifier:
         # 3) we have only one features with the same value
         # 4) we have the same labels
         if (depth == self.maxDepth or
-           len(data) == self.maxLeaves or 
-           (data.shape[1] == 1 and  len(np.unique(data[:, 0]) == 1)) or
-           len(np.unique(label)) == 1
-           ):
-           targetLabel = chooseMaxFrequency(label)
-           # for leaf node we don't need to pass the feature index
-           node = Node(-1, targetLabel)
-           return node
+                len(data) == self.maxLeaves or
+                (data.shape[1] == 1 and len(np.unique(data[:, 0]) == 1)) or
+                len(np.unique(label)) == 1
+            ):
+            targetLabel = chooseMaxFrequency(label)
+            # for leaf node we don't need to pass the feature index
+            node = Node(-1, targetLabel)
+            return node
 
         # we need to build the node.
         bestFeature = self.featureSelection(data, label)
@@ -93,15 +103,15 @@ class DecisionTreeClassifier:
         # create the children for the current node
         for key in partitions:
             index = partitions[key]
-            child = self.split(data[index, :][:, [x for x in range(data.shape[1]) if x != bestFeature]], 
-                               label[index], 
+            child = self.split(data[index, :][:, [x for x in range(data.shape[1]) if x != bestFeature]],
+                               label[index],
                                depth + 1)
             node.children[key] = child
         return node
-        
- 
+
     # split the data set by the target feature_index
     # return the splitted index
+
     def splitByfeature(self, data, feature_idx):
         nClass = np.unique(data[:, feature_idx])
         result = {}
@@ -125,18 +135,22 @@ class DecisionTreeClassifier:
             currentEntropy = 0
             for key in subIndexes:
                 idx = subIndexes[key]
-                currentEntropy += len(label[idx]) * calcEntropy(label[idx]) / nSize
+                currentEntropy += len(label[idx]) * \
+                    calcEntropy(label[idx]) / nSize
             if currentEntropy < minEntropy:
                 minEntropy = currentEntropy
                 bestFeatures = i
         return bestFeatures
 
 # **************************unit test function.************************************
+
+
 def test_chooseMaxFrequency():
-    A=['a','b','b','c','d','b','a']
+    A = ['a', 'b', 'b', 'c', 'd', 'b', 'a']
     assert chooseMaxFrequency(A) == 'b'
     print("testing...chooseMaxFrequency()")
     print("pass!")
+
 
 def test_calcEntropy():
     X = np.zeros(5)
@@ -148,10 +162,11 @@ def test_calcEntropy():
     print("testing...calcEntropy()")
     print("pass!")
 
+
 def test_decisionTree():
     clf = DecisionTreeClassifier(100, 100)
-    X = np.array([[0, 0, 0], 
-                  [1, 0, 0], 
+    X = np.array([[0, 0, 0],
+                  [1, 0, 0],
                   [0, 0, 0],
                   [0, 0, 0],
                   [0, 1, 0],
@@ -160,7 +175,7 @@ def test_decisionTree():
                   [0, 1, 0],
                   [1, 0, 0],
                   [1, 0, 0]
-                ])
+                  ])
     Y = np.array([0, 1, 0, 0, 1, 0, 0, 1, 0, 0])
     # test splitByfeatures
     result = clf.splitByfeature(X, 0)
@@ -168,15 +183,17 @@ def test_decisionTree():
     idx = clf.featureSelection(X, Y)
     clf.fit(X, Y)
 
-    X_test = np.array([[1, 0, 0], 
+    X_test = np.array([[1, 0, 0],
                        [0, 1, 0],
                        [0, 0, 0]])
     predictions = clf.predict(X_test)
+
 
 def sanity_check():
     # test_chooseMaxFrequency()
     # test_calcEntropy()
     test_decisionTree()
+
 
 if __name__ == '__main__':
     sanity_check()
