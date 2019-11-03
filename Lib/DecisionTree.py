@@ -78,7 +78,7 @@ class DecisionTreeClassifier:
         # 4) we have the same labels
         if (depth == self.maxDepth or
            len(data) == self.maxLeaves or 
-           (data.shape[1] == 1 and  len(np.unique(data[:, 0]) == 1)) or
+           (data.shape[1] == 1 and  len(np.unique(data[:, 0])) == 1) or
            len(np.unique(label)) == 1
            ):
            targetLabel = chooseMaxFrequency(label)
